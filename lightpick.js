@@ -345,14 +345,16 @@
 
             html += '<section class="lightpick__month">';
             html += '<header class="lightpick__month-title-bar">'
+            html += '<button type="button" class="lightpick__previous-action"><i class="material-icons">arrow_back</i></button>'
             html += '<div class="lightpick__month-title">'
             + renderMonthsList(day, opts)
             + renderYearsList(day, opts)
             + '</div>';
+            html += '<button type="button" class="lightpick__next-action"><i class="material-icons">arrow_forward</i></button>'
 
-            if (opts.numberOfMonths === 1) {
-                html += renderTopButtons(opts, 'days');
-            }
+            // if (opts.numberOfMonths === 1) {
+            //     html += renderTopButtons(opts, 'days');
+            // }
 
             html += '</header>'; // lightpick__month-title-bar
 
@@ -470,9 +472,9 @@
         if (opts.footer) {
             html += '<div class="lightpick__footer">';
             if (opts.footer === true) {
-                html += '<button type="button" class="lightpick__reset-action">' + opts.locale.buttons.reset + '</button>';
+                html += '<button type="button" class="btn btn-shade lightpick__reset-action">' + opts.locale.buttons.reset + '</button>';
                 html += '<div class="lightpick__footer-message"></div>';
-                html += '<button type="button" class="lightpick__apply-action">' + opts.locale.buttons.apply + '</button>';
+                html += '<button type="button" class="btn lightpick__apply-action">' + opts.locale.buttons.apply + '</button>';
             }
             else {
                 html += opts.footer;
