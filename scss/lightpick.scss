@@ -50,7 +50,7 @@
 $lightpick-font: "Montserrat", sans-serif !default;
 $lightpick-line-height: 1.125em !default;
 $lightpick-border-radius: 4px !default;
-$lightpick-padding: 3rem 2rem !default;
+$lightpick-padding: 4px !default;
 $lightpick-color: #bc9cff !default;
 $lightpick-color-dark: rgba(31, 32, 65, 0.5) !default;
 $lightpick-background-color: #fff !default;
@@ -60,6 +60,11 @@ $lightpick-title-font-size: 16px !default;
 $lightpick-title-font-weight: bold !default;
 $lightpick-day-of-week-font-size: 1.5rem !default;
 $lightpick-day-of-week-font-weight: bold !default;
+$lightpick-day-background-color: linear-gradient(
+  180deg,
+  #bc9cff 0%,
+  #8ba4f9 100%
+) !default;
 $lightpick-day-hover-color: #e0e0e0 !default;
 $lightpick-day-hover-background-image-color: lightpick-str-replace(
   quote(#{$lightpick-day-hover-color}),
@@ -80,14 +85,13 @@ $lightpick-selected-date-background-image-color: lightpick-str-replace(
 );
 $lightpick-selected-date-background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle fill='#{$lightpick-selected-date-background-image-color}' cx='16' cy='16' r='16'/%3E%3C/svg%3E") !default;
 $lightpick-selected-date-font-weight: bold !default;
-$lightpick-selected-range-background-color: rgba(38, 139, 210, 0.1) !default;
-$lightpick-selected-range-hover-background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle fill='#{rgba($lightpick-selected-date-background-color, 0.5)}' cx='16' cy='16' r='16'/%3E%3C/svg%3E") !default;
-$lightpick-today-color: linear-gradient(
+$lightpick-selected-range-background-color: rgba(230, 232, 254, 0.5) !default;
+$lightpick-selected-range-hover-background-image: $lightpick-selected-date-background-color !default;
+$lightpick-today-background: linear-gradient(
   180deg,
   #6fcf97 0%,
   #66d2ea 100%
 ) !default;
-$lightpick-today-background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle fill='#{rgba($lightpick-today-color, .5)}' cx='16' cy='16' r='16'/%3E%3C/svg%3E") !default;
 $lightpick-tooltip-background-color: #fff !default;
 $lightpick-tooltip-padding: 4px 8px !default;
 $lightpick-tooltip-margin: -(unquote(nth(lightpick-str-split(quote(#{$lightpick-tooltip-padding}), " "), 1))) !default;
@@ -114,7 +118,7 @@ $lightpick-action-close-font-size: 18px !default;
 .lightpick {
   position: absolute;
   z-index: 99999;
-  padding: $lightpick-padding;
+  padding: 3rem 2rem;
   border-radius: $lightpick-border-radius;
   background-color: $lightpick-background-color;
   box-shadow: $lightpick-box-shadow;
@@ -264,98 +268,160 @@ $lightpick-action-close-font-size: 18px !default;
     color: $lightpick-color-dark;
     display: flex;
     height: $lightpick-day-size;
-    background-position: center center;
-    background-size: contain;
-    background-repeat: no-repeat;
     font-size: $lightpick-day-font-size;
     justify-content: center;
     align-items: center;
     cursor: default;
+    position: relative;
+    z-index: 1;
 
-    &.is-today {
-      background-image: $lightpick-today-background-image;
-      background-size: 18.8% auto;
-      background-position: center bottom;
-      color: $lightpick-today-color;
+    &.is-available:hover,
+    &.is-available.is-start-date.is-in-range.is-end-date,
+    &.is-available.is-start-date.is-in-range,
+    &.is-available.is-end-date.is-in-range {
+      color: #fff;
+      &::before {
+        content: "";
+        background: $lightpick-day-background-color;
+        border-radius: 50%;
+        height: 100%;
+        position: absolute;
+        width: 100%;
+        z-index: -1;
+      }
+    }
+    &.is-available.is-in-range {
+      border-radius: 0;
+      background: $lightpick-selected-range-background-color;
+      position: relative;
+      z-index: 1;
+      color: $lightpick-color-dark;
+      &:hover {
+        background: $lightpick-selected-range-background-color;
+        &::before {
+          border-radius: 50%;
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: $lightpick-day-background-color;
+          opacity: 0.5;
+        }
+      }
     }
 
-    &:not(.is-disabled):hover {
-      background-size: contain;
-      background-image: $lightpick-day-hover-background-image;
+    &.is-available.is-start-date.is-in-range {
+      border-top-left-radius: 50%;
+      border-bottom-left-radius: 50%;
+    }
+    &.is-available.is-end-date.is-in-range {
+      border-top-right-radius: 50%;
+      border-bottom-right-radius: 50%;
+    }
+    &.is-available.is-start-date.is-in-range.is-end-date {
+      border-radius: 50%;
+    }
+
+    &.is-today {
+      background: $lightpick-today-background;
+      color: #fff;
+      border-radius: 50%;
     }
 
     &.is-disabled {
       opacity: $lightpick-day-disabled-opacity;
       pointer-events: none;
-
-      &.is-forward-selected {
-        opacity: 1;
-
-        &:not(.is-start-date) {
-          background-color: $lightpick-selected-range-background-color;
-          background-image: none;
-        }
-      }
     }
 
-    &.disabled-tooltip {
-      pointer-events: auto;
-    }
+    //   &.is-forward-selected {
+    //     opacity: 1;
 
-    &.is-previous-month,
-    &.is-next-month {
-      color: rgba(31, 32, 65, 0.25);
-    }
+    //     &:not(.is-start-date) {
+    //       background-color: $lightpick-selected-range-background-color;
+    //       background-image: none;
+    //     }
+    //   }
+    // }
 
-    &#{&}.is-in-range:not(.is-disabled) {
-      opacity: 1;
-    }
+    // &.disabled-tooltip {
+    //   pointer-events: auto;
+    // }
 
-    &.is-in-range {
-      border-radius: 0;
-      background-color: $lightpick-selected-range-background-color;
-      background-image: none;
+    // &.is-previous-month,
+    // &.is-next-month {
+    //   color: rgba(31, 32, 65, 0.25);
+    // }
 
-      &:hover {
-        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle fill='rgba(38, 139, 210, 0.5)' cx='16' cy='16' r='16'/%3E%3C/svg%3E");
-      }
-    }
+    // &#{&}.is-in-range:not(.is-disabled) {
+    //   opacity: 1;
+    // }
 
-    &.is-start-date.is-in-range,
-    &.is-end-date.is-in-range.is-flipped {
-      border-top-left-radius: 50%;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 50%;
-      background: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
-      background-image: none;
-    }
+    // &.is-in-range {
+    //   border-radius: 0;
+    //   background: $lightpick-selected-range-background-color;
+    //   position: relative;
+    //   z-index: 1;
+    //   &:hover {
+    //     background: $lightpick-day-background-color;
+    //     border-radius: 50%;
+    //     &::before {
+    //       content: "";
+    //       position: absolute;
+    //       top: 0;
+    //       left: 0;
+    //       right: 0;
+    //       bottom: 0;
+    //       background: $lightpick-selected-range-background-color;
+    //     }
+    //   }
+    // }
 
-    &.is-end-date.is-in-range,
-    &.is-start-date.is-in-range.is-flipped {
-      border-top-left-radius: 0;
-      border-top-right-radius: 50%;
-      border-bottom-right-radius: 50%;
-      border-bottom-left-radius: 0;
-      background: linear-gradient(180deg, #bc9cff 0%, #8ba4f9 100%);
-      background-image: none;
-    }
+    // &.is-start-date.is-in-range,
+    // &.is-end-date.is-in-range.is-flipped,
+    // &.is-end-date.is-in-range,
+    // &.is-start-date.is-in-range.is-flipped,
+    // &:not(.is-disabled):hover {
+    //   color: #fff;
+    //   &::before {
+    //     content: "";
+    //     background: $lightpick-day-background-color;
+    //     border-radius: 50%;
+    //     height: 100%;
+    //     position: absolute;
+    //     width: 100%;
+    //     z-index: -1;
+    //   }
+    // }
 
-    &.is-start-date.is-end-date {
-      background-color: transparent;
-      background-image: $lightpick-selected-date-background-image;
-    }
+    // &.is-available.is-start-date.is-in-range,
+    // &.is-available.is-end-date.is-in-range {
+    //   background: $lightpick-selected-range-background-color;
+    //   border-top-left-radius: 50%;
+    //   border-bottom-left-radius: 50%;
+    //   z-index: 1;
+    //   position: relative;
+    // }
 
-    &.is-start-date,
-    &.is-end-date,
-    &.is-start-date:hover,
-    &.is-end-date:hover {
-      background-image: $lightpick-selected-date-background-image;
-      background-size: auto;
-      background-position: center;
-      color: $lightpick-selected-date-color;
-      font-weight: $lightpick-selected-date-font-weight;
-    }
+    // &.is-available.is-start-date.is-in-range:hover {
+    //   border-top-left-radius: 50%;
+    //   border-bottom-left-radius: 50%;
+    // }
+    // &.is-available.is-end-date.is-in-range {
+    //   border-top-left-radius: 0;
+    //   border-bottom-left-radius: 0;
+    //   border-top-right-radius: 50%;
+    //   border-bottom-right-radius: 50%;
+    // }
+
+    // &.is-start-date.is-end-date {
+    //   border-radius: 50%;
+    // }
+
+    // &.is-available.is-start-date.is-in-range.is-end-date {
+    //   border-radius: 50%;
+    // }
   }
 
   &__tooltip {
