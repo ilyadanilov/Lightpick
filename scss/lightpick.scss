@@ -104,12 +104,6 @@ $lightpick-dropdown-font-weight: bold !default;
 $lightpick-dropdown-disabled-color: #333 !default;
 $lightpick-action-width: 32px !default;
 $lightpick-action-height: $lightpick-action-width !default;
-$lightpick-action-background-color: #ddd !default;
-$lightpick-action-reset-background-color: #aeacad !default;
-$lightpick-action-reset-color: #fff !default;
-$lightpick-action-apply-background-color: #2495f3 !default;
-$lightpick-action-apply-color: #fff !default;
-$lightpick-action-border-radius: 5px !default;
 $lightpick-action-font-size: 12px !default;
 $lightpick-action-close-font-size: 18px !default;
 
@@ -466,18 +460,16 @@ $lightpick-action-close-font-size: 18px !default;
 
   &__reset-action,
   &__apply-action {
-    border-radius: $lightpick-action-border-radius;
     font-size: $lightpick-action-font-size;
+    background: none;
     border: none;
   }
 
   &__reset-action {
-    color: $lightpick-action-reset-color;
-    background-color: $lightpick-action-reset-background-color;
+    color: $lightpick-color-dark;
   }
 
   &__apply-action {
-    color: $lightpick-action-apply-color;
-    background-color: $lightpick-action-apply-background-color;
+    color: $lightpick-color;
   }
 }
